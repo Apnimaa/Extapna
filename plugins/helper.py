@@ -21,9 +21,9 @@ IST = pytz.timezone("Asia/Kolkata")
 
 bot = Client(
     "Master",
-    api_id=Config.API_ID,
-    api_hash=Config.API_HASH,
-    bot_token=Config.BOT_TOKEN
+    api_id=27433400,
+    api_hash="1a286620de5ffe0a7d9b57e604293555",
+    bot_token=""
 )
 
 # ---------------- THUMB SAFE ---------------- #
@@ -144,3 +144,4 @@ async def save_api(bot, m):
         LOGGER.error("Save API error: %s", e)
         await ask.edit("❌ Failed to save API")
         
+
