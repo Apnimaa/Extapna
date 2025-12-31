@@ -10,7 +10,7 @@ bot = Client(
     api_id=27433400,
     api_hash="1a286620de5ffe0a7d9b57e604293555",
     bot_token="8282655063:AAFKE7fkSPMg_nEiaV1gTKY87JK7Jgd-y7s",
-    plugins=dict(root="plugins")
+    plugins=dict(root="modules")
 )
 
 async def main():
