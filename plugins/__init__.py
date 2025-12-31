@@ -1,42 +1,78 @@
-from pyrogram import filters, Client as bot
+from os.path import dirname, basename, isfile
+import glob
+
+modules = glob.glob(dirname(__file__) + "/*.py")
+ALL_MODULES = [
+    basename(f)[:-3]
+    for f in modules
+    if isfile(f) and not f.endswith("__init__.py")
+]
+
+from pyrogram import filters, Client
 from modules import (
     awadhfree, ifasfree, verbalfree, cdsfree, icsfree, pw, khan, kd, cp, neon,
     appx_master, testlivefree, utk, kaksha, pwfree, khanfree, iq,
     vision, nidhi, cpfree, allen, iqfree, ifas, pathfree,
     allenv2, abhinavfree, vajiram, qualityfree, jrffree, cw
 )
-import master.key as key, msg
+
+import master.key as key
+import msg
 from config import Config
 from database import db
 import buttom
+
+bot = Client("Master")
+
+# ---------------- START ---------------- #
 
 @bot.on_message(filters.command("start") & filters.private)
 async def start_msg(bot, m):
     user_id = int(m.chat.id)
     await db.db_instance.save_subscriber(user_id)
+
     if not await join_channel_if_needed(bot, m):
         return
+
     user_mention = m.from_user.mention
-    await bot.send_photo(m.chat.id,photo=await key.send_random_photo(),caption=msg.START.format(user_mention),reply_markup=key.join_user())
+    await bot.send_photo(
+        m.chat.id,
+        photo=await key.send_random_photo(),
+        caption=msg.START.format(user_mention),
+        reply_markup=key.join_user()
+    )
 
 @bot.on_message(filters.command("upgrade") & filters.private)
 async def upgrade_msg(bot, m):
     if not await join_channel_if_needed(bot, m):
         return
-    await bot.send_photo(m.chat.id,photo=await key.send_random_photo(), caption=msg.UPGRADE, reply_markup=key.contact())
+
+    await bot.send_photo(
+        m.chat.id,
+        photo=await key.send_random_photo(),
+        caption=msg.UPGRADE,
+        reply_markup=key.contact()
+    )
 
 @bot.on_message(filters.command("app"))
 async def start_app(bot, m):
     if not await join_channel_if_needed(bot, m):
         return
-    user_id = int(m.chat.id)
-    await bot.send_photo(chat_id=user_id,photo=await key.send_random_photo(),caption=msg.APP,reply_markup=buttom.home())
 
+    await bot.send_photo(
+        m.chat.id,
+        photo=await key.send_random_photo(),
+        caption=msg.APP,
+        reply_markup=buttom.home()
+    )
+
+# ---------------- CALLBACK ---------------- #
 
 @bot.on_callback_query()
 async def callback_handler(bot, callback_query):
     if not await join_channel_if_needed(bot, callback_query.message):
         return
+
     data = callback_query.data
     call_msg = callback_query.message
     a = callback_query.answer
